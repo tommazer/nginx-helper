@@ -19,7 +19,7 @@ namespace rtCamp\WP\Nginx {
 
 		var $minium_WP = '3.0';
 		var $options = null;
-		var $plugin_name = 'nginx-helper';
+		var $plugin_name = 'Hoasted Cache';
 
 		const WP_CLI_COMMAND = 'nginx-helper';
 
