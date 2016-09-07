@@ -1,12 +1,12 @@
 <?php
 /*
-  Plugin Name: Nginx Helper
-  Plugin URI: https://rtcamp.com/nginx-helper/
-  Description: Cleans nginx's fastcgi/proxy cache or redis-cache whenever a post is edited/published. Also does a few more things.
-  Version: 1.9.8
-  Author: rtCamp
-  Author URI: https://rtcamp.com
-  Text Domain: nginx-helper
+  Plugin Name: Hoasted Cache
+  Plugin URI: https://www.hoasted.com/hoasted-cache/
+  Description: Enables the use of Hoasted Dynamic Caching
+  Version: 1.0.0
+  Author: Hoasted
+  Author URI: https://www.hoasted.com
+  Text Domain: hoasted-cache
   Requires at least: 3.0
   Tested up to: 4.6
  */
