@@ -155,7 +155,7 @@ namespace hoasted\WP\Nginx {
 <!--												<input type="radio" value="unlink_files" id="purge_method_unlink_files" name="purge_method"--><?php //checked( isset( $hc_wp_nginx_helper->options['purge_method'] ) ? $hc_wp_nginx_helper->options['purge_method'] : '', 'unlink_files' ); ?><!-->-->
 <!--												&nbsp;--><?php //_e( 'Delete local server cache files', 'hoastedcache' ); ?><!--<br />-->
 <!--												<small>--><?php //_e( 'Checks for matching cache file in <strong>hc_wp_nginx_HELPER_CACHE_PATH</strong>. Does not require any other modules. Requires that the cache be stored on the same server as WordPress. You must also be using the default nginx cache options (levels=1:2) and (fastcgi_cache_key "$scheme$request_method$host$request_uri"). ', 'hoastedcache' ); ?><!--</small>-->
-<!---->
+
 <!--											</label><br />-->
 										</fieldset>
 									</td>
