@@ -12,8 +12,8 @@
  */
 
 namespace hoasted\WP\Nginx {
-	define( 'hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH', plugin_dir_path( __FILE__ ) );
-	define( 'hoasted\WP\Nginx\RT_WP_NGINX_HELPER_URL', plugin_dir_url( __FILE__ ) );
+	define( 'hoasted\WP\Nginx\HC_WP_NGINX_HELPER_PATH', plugin_dir_path( __FILE__ ) );
+	define( 'hoasted\WP\Nginx\HC_WP_NGINX_HELPER_URL', plugin_dir_url( __FILE__ ) );
 
 	class Helper {
 
@@ -45,35 +45,35 @@ namespace hoasted\WP\Nginx {
 		function start_helper()
 		{
 
-			global $rt_wp_nginx_purger;
+			global $hc_wp_nginx_purger;
 			add_action( 'shutdown', array( &$this, 'add_timestamps' ), 99999 );
 			add_action( 'add_init', array( &$this, 'update_map' ) );
 
-			//add_action( 'save_post', array( &$rt_wp_nginx_purger, 'purgePost' ), 200, 1 );
-			// add_action( 'publish_post', array( &$rt_wp_nginx_purger, 'purgePost' ), 200, 1 );
-			// add_action( 'publish_page', array( &$rt_wp_nginx_purger, 'purgePost' ), 200, 1 );
-			add_action( 'wp_insert_comment', array( &$rt_wp_nginx_purger, 'purgePostOnComment' ), 200, 2 );
-			add_action( 'transition_comment_status', array( &$rt_wp_nginx_purger, 'purgePostOnCommentChange' ), 200, 3 );
+			//add_action( 'save_post', array( &$hc_wp_nginx_purger, 'purgePost' ), 200, 1 );
+			// add_action( 'publish_post', array( &$hc_wp_nginx_purger, 'purgePost' ), 200, 1 );
+			// add_action( 'publish_page', array( &$hc_wp_nginx_purger, 'purgePost' ), 200, 1 );
+			add_action( 'wp_insert_comment', array( &$hc_wp_nginx_purger, 'purgePostOnComment' ), 200, 2 );
+			add_action( 'transition_comment_status', array( &$hc_wp_nginx_purger, 'purgePostOnCommentChange' ), 200, 3 );
 
 			// $args = array( '_builtin' => false );
 			// $_rt_custom_post_types = get_post_types( $args );
 			// if ( isset( $post_types ) && !empty( $post_types ) ) {
 			// 	if ( $this->options['rt_wp_custom_post_types'] == true ) {
 			// 		foreach ( $_rt_custom_post_types as $post_type ) {
-			// 			add_action( 'publish_' . trim( $post_type ), array( &$rt_wp_nginx_purger, 'purgePost' ), 200, 1 );
+			// 			add_action( 'publish_' . trim( $post_type ), array( &$hc_wp_nginx_purger, 'purgePost' ), 200, 1 );
 			// 		}
 			// 	}
 			// }
 
 			add_action( 'transition_post_status', array( &$this, 'set_future_post_option_on_future_status' ), 20, 3 );
 			add_action( 'delete_post', array( &$this, 'unset_future_post_option_on_delete' ), 20, 1 );
-			add_action( 'nm_check_log_file_size_daily', array( &$rt_wp_nginx_purger, 'checkAndTruncateLogFile' ), 100, 1 );
-			add_action( 'edit_attachment', array( &$rt_wp_nginx_purger, 'purgeImageOnEdit' ), 100, 1 );
+			add_action( 'nm_check_log_file_size_daily', array( &$hc_wp_nginx_purger, 'checkAndTruncateLogFile' ), 100, 1 );
+			add_action( 'edit_attachment', array( &$hc_wp_nginx_purger, 'purgeImageOnEdit' ), 100, 1 );
 			add_action( 'wpmu_new_blog', array( &$this, 'update_new_blog_options' ), 10, 1 );
-			add_action( 'transition_post_status', array( &$rt_wp_nginx_purger, 'purge_on_post_moved_to_trash' ), 20, 3 );
-			add_action( 'edit_term', array( &$rt_wp_nginx_purger, 'purge_on_term_taxonomy_edited' ), 20, 3 );
-			add_action( 'delete_term', array( &$rt_wp_nginx_purger, 'purge_on_term_taxonomy_edited' ), 20, 3 );
-			add_action( 'check_ajax_referer', array( &$rt_wp_nginx_purger, 'purge_on_check_ajax_referer' ), 20, 2 );
+			add_action( 'transition_post_status', array( &$hc_wp_nginx_purger, 'purge_on_post_moved_to_trash' ), 20, 3 );
+			add_action( 'edit_term', array( &$hc_wp_nginx_purger, 'purge_on_term_taxonomy_edited' ), 20, 3 );
+			add_action( 'delete_term', array( &$hc_wp_nginx_purger, 'purge_on_term_taxonomy_edited' ), 20, 3 );
+			add_action( 'check_ajax_referer', array( &$hc_wp_nginx_purger, 'purge_on_check_ajax_referer' ), 20, 2 );
 			add_action( 'admin_init', array( &$this, 'purge_all' ) );
 
 			// expose action to allow other plugins to purge the cache
@@ -81,7 +81,7 @@ namespace hoasted\WP\Nginx {
 
 			// Load WP-CLI command
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
-				require_once RT_WP_NGINX_HELPER_PATH . 'wp-cli.php';
+				require_once hc_wp_nginx_HELPER_PATH . 'wp-cli.php';
 				\WP_CLI::add_command( self::WP_CLI_COMMAND, 'Nginx_Helper_WP_CLI_Command' );
 			}
 		}
@@ -93,14 +93,14 @@ namespace hoasted\WP\Nginx {
 			if ( !is_dir( $path ) ) {
 				mkdir( $path );
 			}
-			include_once (RT_WP_NGINX_HELPER_PATH . 'admin/install.php');
-			rt_wp_nginx_helper_install();
+			include_once (HC_WP_NGINX_HELPER_PATH . 'admin/install.php');
+			hc_wp_nginx_helper_install();
 		}
 
 		function deactivate()
 		{
-			include_once (RT_WP_NGINX_HELPER_PATH . 'admin/install.php');
-			rt_wp_nginx_helper_uninstall();
+			include_once (HC_WP_NGINX_HELPER_PATH . 'admin/install.php');
+			hc_wp_nginx_helper_uninstall();
 		}
 
 		function required_wp_version()
@@ -109,8 +109,8 @@ namespace hoasted\WP\Nginx {
 			global $wp_version;
 			$wp_ok = version_compare( $wp_version, $this->minium_WP, '>=' );
 			if ( ($wp_ok == FALSE ) ) {
-				add_action( 'admin_notices', create_function( '', 'global $rt_wp_nginx_helper; printf (\'<div id="message" class="error"><p><strong>\' . __(\'Sorry, Nginx Helper requires WordPress %s or higher\', "nginx-helper" ) . \'</strong></p></div>\', $rt_wp_nginx_helper->minium_WP );' ) );
-				add_action( 'network_admin_notices', create_function( '', 'global $rt_wp_nginx_helper; printf (\'<div id="message" class="error"><p><strong>\' . __(\'Sorry, Nginx Helper requires WordPress %s or higher\', "nginx-helper" ) . \'</strong></p></div>\', $rt_wp_nginx_helper->minium_WP );' ) );
+				add_action( 'admin_notices', create_function( '', 'global $hc_wp_nginx_helper; printf (\'<div id="message" class="error"><p><strong>\' . __(\'Sorry, Nginx Helper requires WordPress %s or higher\', "nginx-helper" ) . \'</strong></p></div>\', $hc_wp_nginx_helper->minium_WP );' ) );
+				add_action( 'network_admin_notices', create_function( '', 'global $hc_wp_nginx_helper; printf (\'<div id="message" class="error"><p><strong>\' . __(\'Sorry, Nginx Helper requires WordPress %s or higher\', "nginx-helper" ) . \'</strong></p></div>\', $hc_wp_nginx_helper->minium_WP );' ) );
 				return false;
 			}
 
@@ -119,13 +119,13 @@ namespace hoasted\WP\Nginx {
 
 		function load_options()
 		{
-			$this->options = get_site_option( 'rt_wp_nginx_helper_options' );
+			$this->options = get_site_option( 'hc_wp_nginx_helper_options' );
 		}
 
 		function set_future_post_option_on_future_status( $new_status, $old_status, $post )
 		{
 
-			global $blog_id, $rt_wp_nginx_purger;
+			global $blog_id, $hc_wp_nginx_purger;
             $purge_status = array( 'publish', 'future' );
 
 			if ( !$this->options['enable_purge'] ) {
@@ -133,15 +133,15 @@ namespace hoasted\WP\Nginx {
 			}
 
             if( in_array( $old_status, $purge_status ) || in_array( $new_status, $purge_status ) ) {
-				$rt_wp_nginx_purger->log( "Purge post on transition post STATUS from " . $old_status . " to " . $new_status );
-				$rt_wp_nginx_purger->purgePost( $post->ID );
+				$hc_wp_nginx_purger->log( "Purge post on transition post STATUS from " . $old_status . " to " . $new_status );
+				$hc_wp_nginx_purger->purgePost( $post->ID );
 			}
 
 			if ( $new_status == 'future' ) {
 				if ( $post && $post->post_status == 'future' && ( ( $post->post_type == 'post' || $post->post_type == 'page' ) || ( isset( $this->options['custom_post_types_recognized'] ) && in_array( $post->post_type, $this->options['custom_post_types_recognized'] ) ) ) ) {
-					$rt_wp_nginx_purger->log( "Set/update future_posts option (post id = " . $post->ID . " and blog id = " . $blog_id . ")" );
+					$hc_wp_nginx_purger->log( "Set/update future_posts option (post id = " . $post->ID . " and blog id = " . $blog_id . ")" );
 					$this->options['future_posts'][$blog_id][$post->ID] = strtotime( $post->post_date_gmt ) + 60;
-					update_site_option( "rt_wp_nginx_helper_global_options", $this->options );
+					update_site_option( "hc_wp_nginx_helper_global_options", $this->options );
 				}
 			}
 		}
@@ -149,20 +149,20 @@ namespace hoasted\WP\Nginx {
 		function unset_future_post_option_on_delete( $post_id )
 		{
 
-			global $blog_id, $rt_wp_nginx_purger;
+			global $blog_id, $hc_wp_nginx_purger;
 			if ( !$this->options['enable_purge'] ) {
 				return;
 			}
 			if ( $post_id && !wp_is_post_revision( $post_id ) ) {
 
 				if ( isset( $this->options['future_posts'][$blog_id][$post_id] ) && count( $this->options['future_posts'][$blog_id][$post_id] ) ) {
-					$rt_wp_nginx_purger->log( "Unset future_posts option (post id = " . $post_id . " and blog id = " . $blog_id . ")" );
+					$hc_wp_nginx_purger->log( "Unset future_posts option (post id = " . $post_id . " and blog id = " . $blog_id . ")" );
 					unset( $this->options['future_posts'][$blog_id][$post_id] );
-					update_site_option( "rt_wp_nginx_helper_global_options", $this->options );
+					update_site_option( "hc_wp_nginx_helper_global_options", $this->options );
 
 					if ( !count( $this->options['future_posts'][$blog_id] ) ) {
 						unset( $this->options['future_posts'][$blog_id] );
-						update_site_option( "rt_wp_nginx_helper_global_options", $this->options );
+						update_site_option( "hc_wp_nginx_helper_global_options", $this->options );
 					}
 				}
 			}
@@ -170,14 +170,14 @@ namespace hoasted\WP\Nginx {
 
 		function update_new_blog_options( $blog_id )
 		{
-			global $rt_wp_nginx_purger;
-			include_once (RT_WP_NGINX_HELPER_PATH . 'admin/install.php');
-			$rt_wp_nginx_purger->log( "New site added (id $blog_id)" );
+			global $hc_wp_nginx_purger;
+			include_once (HC_WP_NGINX_HELPER_PATH . 'admin/install.php');
+			$hc_wp_nginx_purger->log( "New site added (id $blog_id)" );
 			$this->update_map();
-			$rt_wp_nginx_purger->log( "New site added to nginx map (id $blog_id)" );
-			$helper_options = rt_wp_nginx_helper_get_options();
-			update_blog_option( $blog_id, "rt_wp_nginx_helper_options", $helper_options );
-			$rt_wp_nginx_purger->log( "Default options updated for the new blog (id $blog_id)" );
+			$hc_wp_nginx_purger->log( "New site added to nginx map (id $blog_id)" );
+			$helper_options = hc_wp_nginx_helper_get_options();
+			update_blog_option( $blog_id, "hc_wp_nginx_helper_options", $helper_options );
+			$hc_wp_nginx_purger->log( "Default options updated for the new blog (id $blog_id)" );
 		}
 
 		function get_map()
@@ -314,8 +314,8 @@ namespace hoasted\WP\Nginx {
 
 		function true_purge_all()
 		{
-			global $rt_wp_nginx_purger;
-			$rt_wp_nginx_purger->true_purge_all();
+			global $hc_wp_nginx_purger;
+			$hc_wp_nginx_purger->true_purge_all();
 		}
 
 		/**
@@ -332,30 +332,30 @@ namespace hoasted\WP\Nginx {
 
 namespace {
 
-	if ( !defined( 'RT_WP_NGINX_HELPER_CACHE_PATH' ) ) {
-		define( 'RT_WP_NGINX_HELPER_CACHE_PATH', '/var/run/nginx-cache' );
+	if ( !defined( 'hc_wp_nginx_HELPER_CACHE_PATH' ) ) {
+		define( 'hc_wp_nginx_HELPER_CACHE_PATH', '/var/run/nginx-cache' );
 	}
 	global $current_blog;
 
 	if ( is_admin() ) {
-		require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . '/admin/admin.php');
+		require_once (hoasted\WP\Nginx\HC_WP_NGINX_HELPER_PATH . '/admin/admin.php');
 		$rtwpAdminPanel = new \hoasted\WP\Nginx\Admin();
 	}
 
-	require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'purger.php');
-	require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'redis-purger.php');
-	require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'compatibility.php');
+	require_once (hoasted\WP\Nginx\HC_WP_NGINX_HELPER_PATH . 'purger.php');
+	require_once (hoasted\WP\Nginx\HC_WP_NGINX_HELPER_PATH . 'redis-purger.php');
+	require_once (hoasted\WP\Nginx\HC_WP_NGINX_HELPER_PATH . 'compatibility.php');
 
-	global $rt_wp_nginx_helper, $rt_wp_nginx_purger, $rt_wp_nginx_compatibility;
-	$rt_wp_nginx_helper = new \hoasted\WP\Nginx\Helper;
+	global $hc_wp_nginx_helper, $hc_wp_nginx_purger, $hc_wp_nginx_compatibility;
+	$hc_wp_nginx_helper = new \hoasted\WP\Nginx\Helper;
 
-	if ( !empty( $rt_wp_nginx_helper->options['cache_method'] ) && $rt_wp_nginx_helper->options['cache_method'] == "enable_redis" ) {
-		$rt_wp_nginx_purger = new \hoasted\WP\Nginx\Redispurger;
+	if ( !empty( $hc_wp_nginx_helper->options['cache_method'] ) && $hc_wp_nginx_helper->options['cache_method'] == "enable_redis" ) {
+		$hc_wp_nginx_purger = new \hoasted\WP\Nginx\Redispurger;
 	} else {
-		$rt_wp_nginx_purger = new \hoasted\WP\Nginx\Purger;
+		$hc_wp_nginx_purger = new \hoasted\WP\Nginx\Purger;
 	}
-	$rt_wp_nginx_compatibility = namespace\hoasted\WP\Nginx\Compatibility::instance();
-	if ( $rt_wp_nginx_compatibility->haveNginx() && !function_exists( 'wp_redirect' ) ) {
+	$hc_wp_nginx_compatibility = namespace\hoasted\WP\Nginx\Compatibility::instance();
+	if ( $hc_wp_nginx_compatibility->haveNginx() && !function_exists( 'wp_redirect' ) ) {
 
 		function wp_redirect( $location, $status = 302 )
 		{

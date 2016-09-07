@@ -3,10 +3,10 @@
 //TODO:: phpRedis based implementation https://github.com/phpredis/phpredis#eval
 //include predis (php implementation for redis)
 
-global $myredis, $rt_wp_nginx_helper, $redis_api, $lua, $rt_wp_nginx_purger;
+global $myredis, $hc_wp_nginx_helper, $redis_api, $lua, $hc_wp_nginx_purger;
 
-$host = $rt_wp_nginx_helper->options['redis_hostname'];
-$port = $rt_wp_nginx_helper->options['redis_port'];
+$host = $hc_wp_nginx_helper->options['redis_hostname'];
+$port = $hc_wp_nginx_helper->options['redis_port'];
 $redis_api = '';
 
 if ( class_exists( 'Redis' ) ) { // Use PHP5-Redis if installed.
@@ -15,8 +15,8 @@ if ( class_exists( 'Redis' ) ) { // Use PHP5-Redis if installed.
         $myredis->connect( $host, $port, 5 );
         $redis_api = 'php-redis';
     } catch ( Exception $e ) { 
-        if( isset($rt_wp_nginx_purger) && !empty($rt_wp_nginx_purger) ) {
-            $rt_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); 
+        if( isset($hc_wp_nginx_purger) && !empty($hc_wp_nginx_purger) ) {
+            $hc_wp_nginx_purger->log( $e->getMessage(), 'ERROR' );
         }
     }
 } else {
@@ -35,8 +35,8 @@ if ( class_exists( 'Redis' ) ) { // Use PHP5-Redis if installed.
         $myredis->connect();
         $redis_api = 'predis';
     } catch ( Exception $e ) { 
-        if( isset($rt_wp_nginx_purger) && !empty($rt_wp_nginx_purger) ) {
-            $rt_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); 
+        if( isset($hc_wp_nginx_purger) && !empty($hc_wp_nginx_purger) ) {
+            $hc_wp_nginx_purger->log( $e->getMessage(), 'ERROR' );
         }
     }
 }
@@ -58,7 +58,7 @@ LUA;
 
 function delete_multi_keys( $key )
 {   
-    global $myredis, $redis_api, $rt_wp_nginx_purger;
+    global $myredis, $redis_api, $hc_wp_nginx_purger;
     
     try {
         if ( !empty( $myredis ) ) {
@@ -73,7 +73,7 @@ function delete_multi_keys( $key )
         } else {
             return false;
         }
-    } catch ( Exception $e ) { $rt_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
+    } catch ( Exception $e ) { $hc_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
 }
 
 /*
@@ -82,14 +82,14 @@ function delete_multi_keys( $key )
 
 function flush_entire_db()
 {
-	global $myredis, $rt_wp_nginx_purger;
+	global $myredis, $hc_wp_nginx_purger;
 	try {
         if ( !empty( $myredis ) ) {
             return $myredis->flushdb();
         } else {
             return false;
         }
-    } catch ( Exception $e ) { $rt_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
+    } catch ( Exception $e ) { $hc_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
 }
 
 /*
@@ -99,7 +99,7 @@ function flush_entire_db()
 
 function delete_single_key( $key )
 {
-	global $myredis, $redis_api, $rt_wp_nginx_purger;
+	global $myredis, $redis_api, $hc_wp_nginx_purger;
     try {
         if ( !empty( $myredis ) ) {
             if( $redis_api == 'predis') {
@@ -110,7 +110,7 @@ function delete_single_key( $key )
         } else {
             return false;
         }
-    } catch ( Exception $e ) { $rt_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
+    } catch ( Exception $e ) { $hc_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
 }
 
 /*
@@ -120,7 +120,7 @@ function delete_single_key( $key )
 
 function delete_keys_by_wildcard( $pattern )
 {
-	global $myredis, $lua, $redis_api, $rt_wp_nginx_purger;
+	global $myredis, $lua, $redis_api, $hc_wp_nginx_purger;
 	/*
 	  Lua Script block to delete multiple keys using wildcard
 	  Script will return count i.e. number of keys deleted
@@ -140,7 +140,7 @@ function delete_keys_by_wildcard( $pattern )
         } else {
             return false;
         }
-    } catch ( Exception $e ) { $rt_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
+    } catch ( Exception $e ) { $hc_wp_nginx_purger->log( $e->getMessage(), 'ERROR' ); }
 }
 
 ?>

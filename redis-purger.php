@@ -6,7 +6,7 @@ namespace hoasted\WP\Nginx {
 
 		public function __construct()
 		{
-			require_once RT_WP_NGINX_HELPER_PATH . 'includes/redis-delete.php';
+			require_once HC_WP_NGINX_HELPER_PATH . 'includes/redis-delete.php';
 		}
 
 		function purgePostOnComment( $comment_id, $comment )
@@ -33,8 +33,8 @@ namespace hoasted\WP\Nginx {
 		function purgePostOnCommentChange( $newstatus, $oldstatus, $comment )
 		{
 
-			global $rt_wp_nginx_helper, $blog_id;
-			if ( !$rt_wp_nginx_helper->options['enable_purge'] ) {
+			global $hc_wp_nginx_helper, $blog_id;
+			if ( !$hc_wp_nginx_helper->options['enable_purge'] ) {
 				return;
 			}
 
@@ -49,7 +49,7 @@ namespace hoasted\WP\Nginx {
 			$this->log( "* Status Changed from $oldstatus to $newstatus" );
 			switch ( $newstatus ) {
 				case 'approved':
-					if ( $rt_wp_nginx_helper->options['purge_page_on_new_comment'] == 1 ) {
+					if ( $hc_wp_nginx_helper->options['purge_page_on_new_comment'] == 1 ) {
 						$this->log( "* Comment ($_comment_id) approved. Post ($_post_id) purging..." );
 						$this->log( "* * * * *" );
 						$this->purgePost( $_post_id );
@@ -59,7 +59,7 @@ namespace hoasted\WP\Nginx {
 				case 'unapproved':
 				case 'trash':
 					if ( $oldstatus == 'approve' ) {
-						if ( $rt_wp_nginx_helper->options['purge_page_on_deleted_comment'] == 1 ) {
+						if ( $hc_wp_nginx_helper->options['purge_page_on_deleted_comment'] == 1 ) {
 							$this->log( "* Comment ($_comment_id) removed as ($newstatus). Post ($_post_id) purging..." );
 							$this->log( "* * * * *" );
 							$this->purgePost( $_post_id );
@@ -71,8 +71,8 @@ namespace hoasted\WP\Nginx {
 
 		function purgePost( $_ID )
 		{
-			global $rt_wp_nginx_helper, $blog_id;
-			if ( !$rt_wp_nginx_helper->options['enable_purge'] ) {
+			global $hc_wp_nginx_helper, $blog_id;
+			if ( !$hc_wp_nginx_helper->options['enable_purge'] ) {
 				return;
 			}
 			switch ( current_filter() ) {
@@ -108,15 +108,15 @@ namespace hoasted\WP\Nginx {
 
 			$this->log( "Function purgePost BEGIN ===" );
 
-			if ( $rt_wp_nginx_helper->options['purge_homepage_on_edit'] == 1 ) {
+			if ( $hc_wp_nginx_helper->options['purge_homepage_on_edit'] == 1 ) {
 				$this->_purge_homepage();
 			}
 
 
 			if ( current_filter() == 'comment_post' || current_filter() == 'wp_set_comment_status' ) {
-				$this->_purge_by_options( $_ID, $blog_id, $rt_wp_nginx_helper->options['purge_page_on_new_comment'], $rt_wp_nginx_helper->options['purge_archive_on_new_comment'], $rt_wp_nginx_helper->options['purge_archive_on_new_comment'] );
+				$this->_purge_by_options( $_ID, $blog_id, $hc_wp_nginx_helper->options['purge_page_on_new_comment'], $hc_wp_nginx_helper->options['purge_archive_on_new_comment'], $hc_wp_nginx_helper->options['purge_archive_on_new_comment'] );
 			} else {
-				$this->_purge_by_options( $_ID, $blog_id, $rt_wp_nginx_helper->options['purge_page_on_mod'], $rt_wp_nginx_helper->options['purge_archive_on_edit'], $rt_wp_nginx_helper->options['purge_archive_on_edit'] );
+				$this->_purge_by_options( $_ID, $blog_id, $hc_wp_nginx_helper->options['purge_page_on_mod'], $hc_wp_nginx_helper->options['purge_archive_on_edit'], $hc_wp_nginx_helper->options['purge_archive_on_edit'] );
 			}
             
             $this->purge_urls();
@@ -126,7 +126,7 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_by_options( $_post_ID, $blog_id, $_purge_page, $_purge_archive, $_purge_custom_taxa )
 		{
-			global $rt_wp_nginx_helper;
+			global $hc_wp_nginx_helper;
 
 			$_post_type = get_post_type( $_post_ID );
 
@@ -210,7 +210,7 @@ namespace hoasted\WP\Nginx {
 
 		function purgeUrl( $url, $feed = true )
 		{
-			global $rt_wp_nginx_helper;
+			global $hc_wp_nginx_helper;
 			
 			$url = trailingslashit( $url );
 			
@@ -218,9 +218,9 @@ namespace hoasted\WP\Nginx {
 			
 			$parse = parse_url( $url );
 			
-			$host = $rt_wp_nginx_helper->options['redis_hostname'];
+			$host = $hc_wp_nginx_helper->options['redis_hostname'];
 			
-			$prefix = $rt_wp_nginx_helper->options['redis_prefix'];
+			$prefix = $hc_wp_nginx_helper->options['redis_prefix'];
 			
 			$_url_purge_base = $prefix . $parse['scheme'] . 'GET' . $parse['host'] . $parse['path'];
 			
@@ -230,15 +230,15 @@ namespace hoasted\WP\Nginx {
 		function log( $msg, $level = 'INFO' )
 		{
 
-			global $rt_wp_nginx_helper;
-			if ( !$rt_wp_nginx_helper->options['enable_log'] ) {
+			global $hc_wp_nginx_helper;
+			if ( !$hc_wp_nginx_helper->options['enable_log'] ) {
 				return;
 			}
 
 			$log_levels = array( "INFO" => 0, "WARNING" => 1, "ERROR" => 2, "NONE" => 3 );
 
-			if ( $log_levels[$level] >= $log_levels[$rt_wp_nginx_helper->options['log_level']] ) {
-				if ( $fp = fopen( $rt_wp_nginx_helper->functional_asset_path() . 'nginx.log', "a+" ) ) {
+			if ( $log_levels[$level] >= $log_levels[$hc_wp_nginx_helper->options['log_level']] ) {
+				if ( $fp = fopen( $hc_wp_nginx_helper->functional_asset_path() . 'nginx.log', "a+" ) ) {
 					fwrite( $fp, "\n" . gmdate( "Y-m-d H:i:s " ) . " | " . $level . " | " . $msg );
 					fclose( $fp );
 				}
@@ -250,21 +250,21 @@ namespace hoasted\WP\Nginx {
 		function checkAndTruncateLogFile()
 		{
 
-			global $rt_wp_nginx_helper;
+			global $hc_wp_nginx_helper;
 
-			$maxSizeAllowed = (is_numeric( $rt_wp_nginx_helper->options['log_filesize'] )) ? $rt_wp_nginx_helper->options['log_filesize'] * 1048576 : 5242880;
+			$maxSizeAllowed = (is_numeric( $hc_wp_nginx_helper->options['log_filesize'] )) ? $hc_wp_nginx_helper->options['log_filesize'] * 1048576 : 5242880;
 
-			$fileSize = filesize( $rt_wp_nginx_helper->functional_asset_path() . 'nginx.log' );
+			$fileSize = filesize( $hc_wp_nginx_helper->functional_asset_path() . 'nginx.log' );
 
 			if ( $fileSize > $maxSizeAllowed ) {
 
 				$offset = $fileSize - $maxSizeAllowed;
 
-				if ( $file_content = file_get_contents( $rt_wp_nginx_helper->functional_asset_path() . 'nginx.log', NULL, NULL, $offset ) ) {
+				if ( $file_content = file_get_contents( $hc_wp_nginx_helper->functional_asset_path() . 'nginx.log', NULL, NULL, $offset ) ) {
 
 					if ( $file_content = strstr( $file_content, "\n" ) ) {
 
-						if ( $fp = fopen( $rt_wp_nginx_helper->functional_asset_path() . 'nginx.log', "w+" ) ) {
+						if ( $fp = fopen( $hc_wp_nginx_helper->functional_asset_path() . 'nginx.log', "w+" ) ) {
 							fwrite( $fp, $file_content );
 							fclose( $fp );
 						}
@@ -301,8 +301,8 @@ namespace hoasted\WP\Nginx {
 		function purge_on_post_moved_to_trash( $new_status, $old_status, $post )
 		{
 
-			global $rt_wp_nginx_helper, $blog_id;
-			if ( !$rt_wp_nginx_helper->options['enable_purge'] ) {
+			global $hc_wp_nginx_helper, $blog_id;
+			if ( !$hc_wp_nginx_helper->options['enable_purge'] ) {
 				return;
 			}
 			if ( $new_status == 'trash' ) {
@@ -315,12 +315,12 @@ namespace hoasted\WP\Nginx {
 
 
 
-				if ( $rt_wp_nginx_helper->options['purge_homepage_on_del'] == 1 ) {
+				if ( $hc_wp_nginx_helper->options['purge_homepage_on_del'] == 1 ) {
 					$this->_purge_homepage();
 				}
 
 
-				$this->_purge_by_options( $post->ID, $blog_id, false, $rt_wp_nginx_helper->options['purge_archive_on_del'], $rt_wp_nginx_helper->options['purge_archive_on_del'] );
+				$this->_purge_by_options( $post->ID, $blog_id, false, $hc_wp_nginx_helper->options['purge_archive_on_del'], $hc_wp_nginx_helper->options['purge_archive_on_del'] );
 
 
 
@@ -352,13 +352,13 @@ namespace hoasted\WP\Nginx {
 		private function _purge_personal_urls()
 		{
 
-			global $rt_wp_nginx_helper;
+			global $hc_wp_nginx_helper;
 
 			$this->log( __( "Purging personal urls", "nginx-helper" ) );
 
-			if ( isset( $rt_wp_nginx_helper->options['purgeable_url']['urls'] ) ) {
+			if ( isset( $hc_wp_nginx_helper->options['purgeable_url']['urls'] ) ) {
 
-				foreach ( $rt_wp_nginx_helper->options['purgeable_url']['urls'] as $u ) {
+				foreach ( $hc_wp_nginx_helper->options['purgeable_url']['urls'] as $u ) {
 					$this->purgeUrl( $u, false );
 				}
 			} else {
@@ -671,8 +671,8 @@ namespace hoasted\WP\Nginx {
 
 		function true_purge_all()
 		{
-			global $rt_wp_nginx_helper;
-			$prefix = trim( $rt_wp_nginx_helper->options['redis_prefix'] );
+			global $hc_wp_nginx_helper;
+			$prefix = trim( $hc_wp_nginx_helper->options['redis_prefix'] );
 			
 			$this->log( '* * * * *' );
 			
@@ -692,15 +692,15 @@ namespace hoasted\WP\Nginx {
 		
 		function purge_urls()
 		{
-			global $rt_wp_nginx_helper;
+			global $hc_wp_nginx_helper;
 			
 			$parse = parse_url( site_url() );
-			$host = $rt_wp_nginx_helper->options['redis_hostname'];
-			$prefix = $rt_wp_nginx_helper->options['redis_prefix'];
+			$host = $hc_wp_nginx_helper->options['redis_hostname'];
+			$prefix = $hc_wp_nginx_helper->options['redis_prefix'];
 			$_url_purge_base = $prefix . $parse['scheme'] . 'GET' . $parse['host'];
 			
-			$purge_urls = isset( $rt_wp_nginx_helper->options['purge_url'] ) && ! empty( $rt_wp_nginx_helper->options['purge_url'] ) ?
-				explode( "\r\n", $rt_wp_nginx_helper->options['purge_url'] ) : array();
+			$purge_urls = isset( $hc_wp_nginx_helper->options['purge_url'] ) && ! empty( $hc_wp_nginx_helper->options['purge_url'] ) ?
+				explode( "\r\n", $hc_wp_nginx_helper->options['purge_url'] ) : array();
 			
                         // Allow plugins/themes to modify/extend urls. Pass urls array in first parameter, second says if wildcards are allowed
                         $purge_urls = apply_filters('rt_nginx_helper_purge_urls', $purge_urls, true);
