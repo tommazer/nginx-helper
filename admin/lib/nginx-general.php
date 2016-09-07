@@ -118,7 +118,7 @@ namespace hoasted\WP\Nginx {
 								<td>
 									<input type="radio" value="enable_fastcgi" id="cache_method_fastcgi" name="cache_method" <?php checked( $hc_wp_nginx_helper->options['cache_method'], "enable_fastcgi" ); ?> />
 									<label for="cache_method_fastcgi">
-										<?php printf( __( 'nginx Fastcgi cache (<a target="_blank" href="%s" title="External settings for nginx">requires external settings for nginx</a>)', 'hoastedcache' ), $nginx_setting_link ); ?>
+										<?php printf( __( 'Nginx Dynamic Cache', 'hoastedcache' ), $nginx_setting_link ); ?>
 									</label>
 								</td>
 							</tr>
