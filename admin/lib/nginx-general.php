@@ -73,7 +73,7 @@ namespace hoasted\WP\Nginx {
 		 * Show Update Message
 		 */
 		if ( isset( $_POST['smart_http_expire_save'] ) ) {
-			echo '<div class="updated"><p>' . __( 'Settings saved.', 'nginx-helper' ) . '</p></div>';
+			echo '<div class="updated"><p>' . __( 'Settings saved.', 'hoastedcache' ) . '</p></div>';
 		}
 
 		/**
@@ -122,14 +122,14 @@ namespace hoasted\WP\Nginx {
 									</label>
 								</td>
 							</tr>
-							<tr valign="top">
-								<td>
-									<input type="radio" value="enable_redis" id="cache_method_redis" name="cache_method" <?php checked( $hc_wp_nginx_helper->options['cache_method'], "enable_redis" ); ?> />
-									<label for="cache_method_redis">
-										<?php printf( __( 'Redis cache', 'nginx-helper' ) ); ?>
-									</label>
-								</td>
-							</tr>
+<!--							<tr valign="top">-->
+<!--								<td>-->
+<!--									<input type="radio" value="enable_redis" id="cache_method_redis" name="cache_method" --><?php //checked( $hc_wp_nginx_helper->options['cache_method'], "enable_redis" ); ?><!-- />-->
+<!--									<label for="cache_method_redis">-->
+<!--										--><?php //printf( __( 'Redis cache', 'nginx-helper' ) ); ?>
+<!--									</label>-->
+<!--								</td>-->
+<!--							</tr>-->
 						</table>
 					</div> <!-- End of .inside -->
 				</div>
