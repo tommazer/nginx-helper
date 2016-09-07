@@ -23,11 +23,11 @@ namespace hoasted\WP\Nginx {
              */
             $this->nginx_helper_tabs = apply_filters( 'rt_nginx_helper_tabs', array(
                 'general' => array(
-                    'menu_title'    => __( 'General', 'nginx-helper' ),
+                    'menu_title'    => __( 'General', 'hoastedcache' ),
                     'menu_slug'     => 'general'
                 ),
                 'support' => array(
-                    'menu_title'    => __( 'Support', 'nginx-helper' ),
+                    'menu_title'    => __( 'Support', 'hoastedcache' ),
                     'menu_slug'     => 'support'
                 ) )
             );
@@ -37,14 +37,14 @@ namespace hoasted\WP\Nginx {
          * Add setting sub-menu for single site
          */
         function add_menu() {
-            add_submenu_page( 'options-general.php', __( 'Nginx Helper', 'nginx-helper' ), __( 'Nginx Helper', 'nginx-helper' ), 'manage_options', 'nginx', array( &$this, 'nginx_create_admin_page' ) );
+            add_submenu_page( 'options-general.php', __( 'Hoasted Cache', 'hoastedcache' ), __( 'Hoasted Cache', 'hoastedcache' ), 'manage_options', 'nginx', array( &$this, 'nginx_create_admin_page' ) );
         }
 
         /**
          * Add setting sub-menu for multi site
          */
         function add_network_menu() {
-            add_submenu_page( 'settings.php', __( 'Nginx Helper', 'nginx-helper' ), __( 'Nginx Helper', 'nginx-helper' ), 'manage_options', 'nginx', array( &$this, 'nginx_create_admin_page' ) );
+            add_submenu_page( 'settings.php', __( 'Hoasted Cache', 'hoastedcache' ), __( 'Hoasted Cache', 'hoastedcache' ), 'manage_options', 'nginx', array( &$this, 'nginx_create_admin_page' ) );
         }
 
         /**

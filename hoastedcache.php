@@ -6,7 +6,7 @@
   Version: 1.0.0
   Author: Hoasted
   Author URI: https://www.hoasted.com
-  Text Domain: hoasted-cache
+  Text Domain: hoastedcache
   Requires at least: 3.0
   Tested up to: 4.6
  */

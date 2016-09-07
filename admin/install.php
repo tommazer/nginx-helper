@@ -1,8 +1,8 @@
 <?php
 /**
- * @author: Saurabh Shukla <saurabh.shukla@rtcamp.com>
+ * @author: Tom Mazer <tom@hoasted.com>
  *
- * Parts of code based off http://wordpress.org/extend/plugins/nginx-manager/ by http://profiles.wordpress.org/hpatoio/ and http://profiles.wordpress.org/rukbat/
+ * Parts of code based off http://wordpress.org/extend/plugins/nginx-helper/ http://wordpress.org/extend/plugins/nginx-manager/ by http://profiles.wordpress.org/hpatoio/ and http://profiles.wordpress.org/rukbat/
  */
 namespace hoasted\WP\Nginx {
 	if ( preg_match( '#' . basename( __FILE__ ) . '#', $_SERVER[ 'PHP_SELF' ] ) ) {
@@ -19,12 +19,12 @@ namespace hoasted\WP\Nginx {
 		$role = get_role( 'administrator' );
 
 		if ( empty( $role ) ) {
-			update_site_option( "hc_wp_nginx_helper_init_check", __( 'Sorry, you need to be an administrator to use Nginx Helper', 'nginx-helper' ) );
+			update_site_option( "hc_wp_nginx_helper_init_check", __( 'Sorry, you need to be an administrator to use Hoasted Cache', 'hoastedcache' ) );
 			return;
 		}
 
-		$role->add_cap( 'Nginx Helper | Config' );
-		$role->add_cap( 'Nginx Helper | Purge cache' );
+		$role->add_cap( 'Hoadted Cache | Config' );
+		$role->add_cap( 'Hoasted Cache | Purge cache' );
 
 		$hc_wp_nginx_helper_get_options = get_site_option( 'hc_wp_nginx_helper_global_options' );
 
@@ -55,8 +55,8 @@ namespace hoasted\WP\Nginx {
 	function hc_wp_nginx_helper_uninstall() {
 		wp_clear_scheduled_hook( 'hc_wp_nginx_helper_check_log_file_size_daily' );
 		delete_site_option( 'hc_wp_nginx_helper_options' );
-		hc_wp_nginx_helper_remove_capability( 'Nginx Helper | Config' );
-		hc_wp_nginx_helper_remove_capability( 'Nginx Helper | Purge cache' );
+		hc_wp_nginx_helper_remove_capability( 'Hoasted Cache | Config' );
+		hc_wp_nginx_helper_remove_capability( 'Hoasted Cache | Purge cache' );
 	}
 
 	function hc_wp_nginx_helper_remove_capability( $capability ) {

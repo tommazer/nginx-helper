@@ -14,7 +14,7 @@ deploy:
 
     - rtcamp/wordpress-svn:
         pluginslug: nginx-helper
-        mainfile: nginx-helper.php
+        mainfile: hoastedcache.php
         svnuser: $SVNUSER
         svnpass: $SVNPASS                    #wordpress.org password
         gituser: $GITUSER
