@@ -1,6 +1,6 @@
 <?php
 
-namespace rtCamp\WP\Nginx {
+namespace hoasted\WP\Nginx {
 
     class Compatibility {
 

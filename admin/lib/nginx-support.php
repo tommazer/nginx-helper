@@ -1,6 +1,6 @@
 <?php
 
-namespace rtCamp\WP\Nginx {
+namespace hoasted\WP\Nginx {
     function nginx_support_options_page() { ?>
         <form id="support" action="" method="post" class="clearfix">
             <div class="postbox">

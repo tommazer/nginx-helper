@@ -4,7 +4,7 @@
  *
  * Parts of code based off http://wordpress.org/extend/plugins/nginx-manager/ by http://profiles.wordpress.org/hpatoio/ and http://profiles.wordpress.org/rukbat/
  */
-namespace rtCamp\WP\Nginx {
+namespace hoasted\WP\Nginx {
 	if ( preg_match( '#' . basename( __FILE__ ) . '#', $_SERVER[ 'PHP_SELF' ] ) ) {
 		die( 'You are not allowed to call this page directly.' );
 	}

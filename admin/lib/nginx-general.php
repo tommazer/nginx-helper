@@ -1,6 +1,6 @@
 <?php
 
-namespace rtCamp\WP\Nginx {
+namespace hoasted\WP\Nginx {
 
 	function nginx_general_options_page()
 	{

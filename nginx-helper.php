@@ -11,9 +11,9 @@
   Tested up to: 4.6
  */
 
-namespace rtCamp\WP\Nginx {
-	define( 'rtCamp\WP\Nginx\RT_WP_NGINX_HELPER_PATH', plugin_dir_path( __FILE__ ) );
-	define( 'rtCamp\WP\Nginx\RT_WP_NGINX_HELPER_URL', plugin_dir_url( __FILE__ ) );
+namespace hoasted\WP\Nginx {
+	define( 'hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH', plugin_dir_path( __FILE__ ) );
+	define( 'hoasted\WP\Nginx\RT_WP_NGINX_HELPER_URL', plugin_dir_url( __FILE__ ) );
 
 	class Helper {
 
@@ -338,23 +338,23 @@ namespace {
 	global $current_blog;
 
 	if ( is_admin() ) {
-		require_once (rtCamp\WP\Nginx\RT_WP_NGINX_HELPER_PATH . '/admin/admin.php');
-		$rtwpAdminPanel = new \rtCamp\WP\Nginx\Admin();
+		require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . '/admin/admin.php');
+		$rtwpAdminPanel = new \hoasted\WP\Nginx\Admin();
 	}
 
-	require_once (rtCamp\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'purger.php');
-	require_once (rtCamp\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'redis-purger.php');
-	require_once (rtCamp\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'compatibility.php');
+	require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'purger.php');
+	require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'redis-purger.php');
+	require_once (hoasted\WP\Nginx\RT_WP_NGINX_HELPER_PATH . 'compatibility.php');
 
 	global $rt_wp_nginx_helper, $rt_wp_nginx_purger, $rt_wp_nginx_compatibility;
-	$rt_wp_nginx_helper = new \rtCamp\WP\Nginx\Helper;
+	$rt_wp_nginx_helper = new \hoasted\WP\Nginx\Helper;
 
 	if ( !empty( $rt_wp_nginx_helper->options['cache_method'] ) && $rt_wp_nginx_helper->options['cache_method'] == "enable_redis" ) {
-		$rt_wp_nginx_purger = new \rtCamp\WP\Nginx\Redispurger;
+		$rt_wp_nginx_purger = new \hoasted\WP\Nginx\Redispurger;
 	} else {
-		$rt_wp_nginx_purger = new \rtCamp\WP\Nginx\Purger;
+		$rt_wp_nginx_purger = new \hoasted\WP\Nginx\Purger;
 	}
-	$rt_wp_nginx_compatibility = namespace\rtCamp\WP\Nginx\Compatibility::instance();
+	$rt_wp_nginx_compatibility = namespace\hoasted\WP\Nginx\Compatibility::instance();
 	if ( $rt_wp_nginx_compatibility->haveNginx() && !function_exists( 'wp_redirect' ) ) {
 
 		function wp_redirect( $location, $status = 302 )
