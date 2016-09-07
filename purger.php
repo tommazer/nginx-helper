@@ -438,12 +438,12 @@ namespace hoasted\WP\Nginx {
 			if ( function_exists('icl_get_home_url') )
 			{
 				$homepage_url = trailingslashit( icl_get_home_url() );
-				$this->log( sprintf( __( "Purging homepage (WPML) '%s'", "nginx-helper" ), $homepage_url ) );
+				$this->log( sprintf( __( "Purging homepage (WPML) '%s'", "hoastedcache" ), $homepage_url ) );
 			}
 			else
 			{
 				$homepage_url = trailingslashit( home_url() );
-				$this->log( sprintf( __( "Purging homepage '%s'", "nginx-helper" ), $homepage_url ) );
+				$this->log( sprintf( __( "Purging homepage '%s'", "hoastedcache" ), $homepage_url ) );
 			}
 
 			$this->purgeUrl( $homepage_url );
@@ -455,7 +455,7 @@ namespace hoasted\WP\Nginx {
 
 			global $hc_wp_nginx_helper;
 
-			$this->log( __( "Purging personal urls", "nginx-helper" ) );
+			$this->log( __( "Purging personal urls", "hoastedcache" ) );
 
 			if ( isset( $hc_wp_nginx_helper->options[ 'purgeable_url' ][ 'urls' ] ) ) {
 
@@ -463,7 +463,7 @@ namespace hoasted\WP\Nginx {
 					$this->purgeUrl( $u, false );
 				}
 			} else {
-				$this->log( "- " . __( "No personal urls available", "nginx-helper" ) );
+				$this->log( "- " . __( "No personal urls available", "hoastedcache" ) );
 			}
 
 			return true;
@@ -471,11 +471,11 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_post_categories( $_post_id ) {
 
-			$this->log( __( "Purging category archives", "nginx-helper" ) );
+			$this->log( __( "Purging category archives", "hoastedcache" ) );
 
 			if ( $categories = wp_get_post_categories( $_post_id ) ) {
 				foreach ( $categories as $category_id ) {
-					$this->log( sprintf( __( "Purging category '%d'", "nginx-helper" ), $category_id ) );
+					$this->log( sprintf( __( "Purging category '%d'", "hoastedcache" ), $category_id ) );
 					$this->purgeUrl( get_category_link( $category_id ) );
 				}
 			}
@@ -485,11 +485,11 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_post_tags( $_post_id ) {
 
-			$this->log( __( "Purging tags archives", "nginx-helper" ) );
+			$this->log( __( "Purging tags archives", "hoastedcache" ) );
 
 			if ( $tags = get_the_tags( $_post_id ) ) {
 				foreach ( $tags as $tag ) {
-					$this->log( sprintf( __( "Purging tag '%s' (id %d)", "nginx-helper" ), $tag->name, $tag->term_id ) );
+					$this->log( sprintf( __( "Purging tag '%s' (id %d)", "hoastedcache" ), $tag->name, $tag->term_id ) );
 					$this->purgeUrl( get_tag_link( $tag->term_id ) );
 				}
 			}
@@ -499,11 +499,11 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_post_custom_taxa( $_post_id ) {
 
-			$this->log( __( "Purging post custom taxonomies related", "nginx-helper" ) );
+			$this->log( __( "Purging post custom taxonomies related", "hoastedcache" ) );
 
 			if ( $custom_taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => false ) ) ) {
 				foreach ( $custom_taxonomies as $taxon ) {
-					$this->log( sprintf( "+ " . __( "Purging custom taxonomy '%s'", "nginx-helper" ), $taxon ) );
+					$this->log( sprintf( "+ " . __( "Purging custom taxonomy '%s'", "hoastedcache" ), $taxon ) );
 
 					if ( ! in_array( $taxon, array( 'category', 'post_tag', 'link_category' ) ) ) {
 
@@ -513,11 +513,11 @@ namespace hoasted\WP\Nginx {
 							}
 						}
 					} else {
-						$this->log( sprintf( "- " . __( "Your built-in taxonomy '%s' has param '_builtin' set to false.", "nginx-helper" ), $taxon ), "WARNING" );
+						$this->log( sprintf( "- " . __( "Your built-in taxonomy '%s' has param '_builtin' set to false.", "hoastedcache" ), $taxon ), "WARNING" );
 					}
 				}
 			} else {
-				$this->log( "- " . __( "No custom taxonomies", "nginx-helper" ) );
+				$this->log( "- " . __( "No custom taxonomies", "hoastedcache" ) );
 			}
 
 			return true;
@@ -525,16 +525,16 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_all_categories() {
 
-			$this->log( __( "Purging all categories", "nginx-helper" ) );
+			$this->log( __( "Purging all categories", "hoastedcache" ) );
 
 			if ( $_categories = get_categories() ) {
 
 				foreach ( $_categories as $c ) {
-					$this->log( sprintf( __( "Purging category '%s' (id %d)", "nginx-helper" ), $c->name, $c->term_id ) );
+					$this->log( sprintf( __( "Purging category '%s' (id %d)", "hoastedcache" ), $c->name, $c->term_id ) );
 					$this->purgeUrl( get_category_link( $c->term_id ) );
 				}
 			} else {
-				$this->log( __( "No categories archives", "nginx-helper" ) );
+				$this->log( __( "No categories archives", "hoastedcache" ) );
 			}
 
 			return true;
@@ -542,16 +542,16 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_all_posttags() {
 
-			$this->log( __( "Purging all tags", "nginx-helper" ) );
+			$this->log( __( "Purging all tags", "hoastedcache" ) );
 
 			if ( $_posttags = get_tags() ) {
 
 				foreach ( $_posttags as $t ) {
-					$this->log( sprintf( __( "Purging tag '%s' (id %d)", "nginx-helper" ), $t->name, $t->term_id ) );
+					$this->log( sprintf( __( "Purging tag '%s' (id %d)", "hoastedcache" ), $t->name, $t->term_id ) );
 					$this->purgeUrl( get_tag_link( $t->term_id ) );
 				}
 			} else {
-				$this->log( __( "No tags archives", "nginx-helper" ) );
+				$this->log( __( "No tags archives", "hoastedcache" ) );
 			}
 
 			return true;
@@ -559,12 +559,12 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_all_customtaxa() {
 
-			$this->log( __( "Purging all custom taxonomies", "nginx-helper" ) );
+			$this->log( __( "Purging all custom taxonomies", "hoastedcache" ) );
 
 			if ( $custom_taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => false ) ) ) {
 
 				foreach ( $custom_taxonomies as $taxon ) {
-					$this->log( sprintf( "+ " . __( "Purging custom taxonomy '%s'", "nginx-helper" ), $taxon ) );
+					$this->log( sprintf( "+ " . __( "Purging custom taxonomy '%s'", "hoastedcache" ), $taxon ) );
 
 					if ( ! in_array( $taxon, array( 'category', 'post_tag', 'link_category' ) ) ) {
 
@@ -574,11 +574,11 @@ namespace hoasted\WP\Nginx {
 							}
 						}
 					} else {
-						$this->log( sprintf( "- " . __( "Your built-in taxonomy '%s' has param '_builtin' set to false.", "nginx-helper" ), $taxon ), "WARNING" );
+						$this->log( sprintf( "- " . __( "Your built-in taxonomy '%s' has param '_builtin' set to false.", "hoastedcache" ), $taxon ), "WARNING" );
 					}
 				}
 			} else {
-				$this->log( "- " . __( "No custom taxonomies", "nginx-helper" ) );
+				$this->log( "- " . __( "No custom taxonomies", "hoastedcache" ) );
 			}
 
 			return true;
@@ -595,7 +595,7 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_all_posts() {
 
-			$this->log( __( "Purging all posts, pages and custom post types.", "nginx-helper" ) );
+			$this->log( __( "Purging all posts, pages and custom post types.", "hoastedcache" ) );
 
 			$args = array(
 				'numberposts' => 0,
@@ -605,11 +605,11 @@ namespace hoasted\WP\Nginx {
 			if ( $_posts = get_posts( $args ) ) {
 
 				foreach ( $_posts as $p ) {
-					$this->log( sprintf( "+ " . __( "Purging post id '%d' (post type '%s')", "nginx-helper" ), $p->ID, $p->post_type ) );
+					$this->log( sprintf( "+ " . __( "Purging post id '%d' (post type '%s')", "hoastedcache" ), $p->ID, $p->post_type ) );
 					$this->purgeUrl( get_permalink( $p->ID ) );
 				}
 			} else {
-				$this->log( "- " . __( "No posts", "nginx-helper" ) );
+				$this->log( "- " . __( "No posts", "hoastedcache" ) );
 			}
 
 			return true;
@@ -617,7 +617,7 @@ namespace hoasted\WP\Nginx {
 
 		private function _purge_all_date_archives() {
 
-			$this->log( __( "Purging all date-based archives.", "nginx-helper" ) );
+			$this->log( __( "Purging all date-based archives.", "hoastedcache" ) );
 
 			$this->_purge_all_daily_archives();
 
@@ -632,7 +632,7 @@ namespace hoasted\WP\Nginx {
 
 			global $wpdb;
 
-			$this->log( __( "Purging all daily archives.", "nginx-helper" ) );
+			$this->log( __( "Purging all daily archives.", "hoastedcache" ) );
 
 			$_query_daily_archives = $wpdb->prepare(
 					"SELECT YEAR(post_date) AS 'year', MONTH(post_date) AS 'month', DAYOFMONTH(post_date) AS 'dayofmonth', count(ID) as posts
@@ -645,11 +645,11 @@ namespace hoasted\WP\Nginx {
 			if ( $_daily_archives = $wpdb->get_results( $_query_daily_archives ) ) {
 
 				foreach ( $_daily_archives as $_da ) {
-					$this->log( sprintf( "+ " . __( "Purging daily archive '%s/%s/%s'", "nginx-helper" ), $_da->year, $_da->month, $_da->dayofmonth ) );
+					$this->log( sprintf( "+ " . __( "Purging daily archive '%s/%s/%s'", "hoastedcache" ), $_da->year, $_da->month, $_da->dayofmonth ) );
 					$this->purgeUrl( get_day_link( $_da->year, $_da->month, $_da->dayofmonth ) );
 				}
 			} else {
-				$this->log( "- " . __( "No daily archives", "nginx-helper" ) );
+				$this->log( "- " . __( "No daily archives", "hoastedcache" ) );
 			}
 		}
 
@@ -657,7 +657,7 @@ namespace hoasted\WP\Nginx {
 
 			global $wpdb;
 
-			$this->log( __( "Purging all monthly archives.", "nginx-helper" ) );
+			$this->log( __( "Purging all monthly archives.", "hoastedcache" ) );
 
 			$_query_monthly_archives = $wpdb->prepare(
 					"SELECT YEAR(post_date) AS 'year', MONTH(post_date) AS 'month', count(ID) as posts
@@ -670,11 +670,11 @@ namespace hoasted\WP\Nginx {
 			if ( $_monthly_archives = $wpdb->get_results( $_query_monthly_archives ) ) {
 
 				foreach ( $_monthly_archives as $_ma ) {
-					$this->log( sprintf( "+ " . __( "Purging monthly archive '%s/%s'", "nginx-helper" ), $_ma->year, $_ma->month ) );
+					$this->log( sprintf( "+ " . __( "Purging monthly archive '%s/%s'", "hoastedcache" ), $_ma->year, $_ma->month ) );
 					$this->purgeUrl( get_month_link( $_ma->year, $_ma->month ) );
 				}
 			} else {
-				$this->log( "- " . __( "No monthly archives", "nginx-helper" ) );
+				$this->log( "- " . __( "No monthly archives", "hoastedcache" ) );
 			}
 		}
 
@@ -682,7 +682,7 @@ namespace hoasted\WP\Nginx {
 
 			global $wpdb;
 
-			$this->log( __( "Purging all yearly archives.", "nginx-helper" ) );
+			$this->log( __( "Purging all yearly archives.", "hoastedcache" ) );
 
 			$_query_yearly_archives = $wpdb->prepare(
 					"SELECT YEAR(post_date) AS 'year', count(ID) as posts
@@ -695,17 +695,17 @@ namespace hoasted\WP\Nginx {
 			if ( $_yearly_archives = $wpdb->get_results( $_query_yearly_archives ) ) {
 
 				foreach ( $_yearly_archives as $_ya ) {
-					$this->log( sprintf( "+ " . __( "Purging yearly archive '%s'", "nginx-helper" ), $_ya->year ) );
+					$this->log( sprintf( "+ " . __( "Purging yearly archive '%s'", "hoastedcache" ), $_ya->year ) );
 					$this->purgeUrl( get_year_link( $_ya->year ) );
 				}
 			} else {
-				$this->log( "- " . __( "No yearly archives", "nginx-helper" ) );
+				$this->log( "- " . __( "No yearly archives", "hoastedcache" ) );
 			}
 		}
 
 		function purge_them_all() {
 
-			$this->log( __( "Let's purge everything!", "nginx-helper" ) );
+			$this->log( __( "Let's purge everything!", "hoastedcache" ) );
 
 			$this->_purge_homepage();
 
@@ -717,19 +717,19 @@ namespace hoasted\WP\Nginx {
 
 			$this->_purge_all_date_archives();
 
-			$this->log( __( "Everthing purged!", "nginx-helper" ) );
+			$this->log( __( "Everthing purged!", "hoastedcache" ) );
 
 			return true;
 		}
 
 		function purge_on_term_taxonomy_edited( $term_id, $tt_id, $taxon ) {
 
-			$this->log( __( "Term taxonomy edited or deleted", "nginx-helper" ) );
+			$this->log( __( "Term taxonomy edited or deleted", "hoastedcache" ) );
 
 			if ( current_filter() == 'edit_term' && $term = get_term( $term_id, $taxon ) ) {
-				$this->log( sprintf( __( "Term taxonomy '%s' edited, (tt_id '%d', term_id '%d', taxonomy '%s')", "nginx-helper" ), $term->name, $tt_id, $term_id, $taxon ) );
+				$this->log( sprintf( __( "Term taxonomy '%s' edited, (tt_id '%d', term_id '%d', taxonomy '%s')", "hoastedcache" ), $term->name, $tt_id, $term_id, $taxon ) );
 			} else if ( current_filter() == 'delete_term' ) {
-				$this->log( sprintf( __( "A term taxonomy has been deleted from taxonomy '%s', (tt_id '%d', term_id '%d')", "nginx-helper" ), $taxon, $term_id, $tt_id ) );
+				$this->log( sprintf( __( "A term taxonomy has been deleted from taxonomy '%s', (tt_id '%d', term_id '%d')", "hoastedcache" ), $taxon, $term_id, $tt_id ) );
 			}
 
 			$this->_purge_homepage();
@@ -742,7 +742,7 @@ namespace hoasted\WP\Nginx {
 			switch ( $action ) {
 				case 'save-sidebar-widgets' :
 
-					$this->log( __( "Widget saved, moved or removed in a sidebar", "nginx-helper" ) );
+					$this->log( __( "Widget saved, moved or removed in a sidebar", "hoastedcache" ) );
 
 					$this->_purge_homepage();
 
