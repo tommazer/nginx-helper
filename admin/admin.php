@@ -75,7 +75,7 @@ namespace hoasted\WP\Nginx {
             } ?>
 
             <div class="wrap rt-nginx-wrapper">
-                <h2 class="rt_option_title"><?php _e( 'Nginx Settings', 'nginx-helper' ); ?></h2>
+                <h2 class="rt_option_title"><?php _e( 'Hoasted Cache', 'hoastedcache' ); ?></h2>
                 <div id="poststuff">
                     <div id="post-body" class="metabox-holder columns-2">
                         <div id="post-body-content"><?php
@@ -120,7 +120,7 @@ namespace hoasted\WP\Nginx {
             }
             $purge_url = add_query_arg( array( 'nginx_helper_action' => 'purge', 'nginx_helper_urls' => 'all' ) );
             $nonced_url = wp_nonce_url( $purge_url, 'nginx_helper-purge_all' );
-            $admin_bar->add_menu( array( 'id' => 'nginx-helper-purge-all', 'title' => __( 'Purge Cache', 'nginx-helper' ), 'href' => $nonced_url, 'meta' => array( 'title' => __( 'Purge Cache', 'nginx-helper' ), ), ) );
+            $admin_bar->add_menu( array( 'id' => 'nginx-helper-purge-all', 'title' => __( 'Purge Cache', 'hoastedcache' ), 'href' => $nonced_url, 'meta' => array( 'title' => __( 'Purge Cache', 'hoastedcache' ), ), ) );
         }
 
         function nginx_admin_enqueue_assets($hook) {
